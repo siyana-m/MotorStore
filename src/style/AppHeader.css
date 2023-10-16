@@ -1,0 +1,13 @@
+* {
+    margin : 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #060b26;
+    height: 80px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color:aliceblue;
+}
