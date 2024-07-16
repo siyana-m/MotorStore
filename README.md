@@ -102,10 +102,6 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
     - Copy the contents of the `motorstore_db.txt` file into the query window.
     - Execute the script to create the necessary tables, triggers, and seed data.
 
-3. **Update the connection string:**
-    - Open the `appsettings.json` file in the `RepairPlatform.Web` project.
-    - Update the `ConnectionStrings` section with your SQL Server connection details:
-
     If you log into SSMS with a username and password:
     ```json
     "ConnectionStrings": {
