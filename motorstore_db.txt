@@ -1,0 +1,221 @@
+USE [master]
+GO
+/****** Object:  Database [react-web-store-database-exercise]    Script Date: 7/16/2024 4:13:40 PM ******/
+CREATE DATABASE [react-web-store-database-exercise]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'react-web-store-database-exercise', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\react-web-store-database-exercise.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'react-web-store-database-exercise_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\react-web-store-database-exercise.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [react-web-store-database-exercise].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ANSI_NULL_DEFAULT ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ANSI_NULLS ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ANSI_PADDING ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ANSI_WARNINGS ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ARITHABORT ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET CURSOR_DEFAULT  LOCAL 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET CONCAT_NULL_YIELDS_NULL ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET QUOTED_IDENTIFIER ON 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET RECOVERY FULL 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET  MULTI_USER 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET QUERY_STORE = OFF
+GO
+USE [react-web-store-database-exercise]
+GO
+/****** Object:  Table [dbo].[UserAccessLevel]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserAccessLevel](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserAccessLevelName] [nvarchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](50) NOT NULL,
+	[LastName] [nvarchar](50) NOT NULL,
+	[Email] [nvarchar](50) NOT NULL,
+	[UserPassword] [nvarchar](100) NOT NULL,
+	[UserAccessLevelId] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_UserAccessLevel] FOREIGN KEY([UserAccessLevelId])
+REFERENCES [dbo].[UserAccessLevel] ([Id])
+GO
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_UserAccessLevel]
+GO
+/****** Object:  StoredProcedure [dbo].[spAccessLevel_Get]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spAccessLevel_Get]
+AS
+BEGIN
+	Select * from dbo.UserAccessLevel
+END
+GO
+/****** Object:  StoredProcedure [dbo].[spAccessLevel_Insert]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spAccessLevel_Insert]
+	@UserAccessLevelName nvarchar(50)
+AS
+begin
+	insert into dbo.UserAccessLevel(UserAccessLevelName)
+	values (@UserAccessLevelName)
+end
+GO
+/****** Object:  StoredProcedure [dbo].[spUser_Get]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spUser_Get]
+	@email nvarchar(50)
+AS
+BEGIN
+	Select * from dbo.Users
+	where email = @email;
+END
+GO
+/****** Object:  StoredProcedure [dbo].[spUser_Insert]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spUser_Insert]
+	@FirstName nvarchar(50),
+	@LastName nvarchar(50),
+	@email nvarchar(50),
+	@UserPassword nvarchar(100),
+	@UserAccessLevelName nvarchar(250) ,
+	@IsActive bit
+AS
+begin
+	insert into dbo.Users (FirstName, LastName, email, UserPassword, UserAccessLevelId, IsActive)
+	select @FirstName, @LastName, @email, @UserPassword, id, @IsActive
+	 from
+                  UserAccessLevel where UserAccessLevelName=@userAccessLevelName
+end
+GO
+/****** Object:  StoredProcedure [dbo].[spUser_Update]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spUser_Update]
+	@Id int,
+	@FirstName nvarchar(50),
+	@LastName nvarchar(50),
+	@UserPassword nvarchar(100),
+	@userAccessLevelName nvarchar(100),
+	@email nvarchar(50),
+	@IsActive bit
+AS
+BEGIN
+declare @AccessLevelId int 
+SELECT @AccessLevelId=Id from UserAccessLevel where userAccessLevelName=@userAccessLevelName
+	
+	update dbo.Users
+	set email = @email,
+		FirstName = @FirstName,
+		LastName = @LastName,
+		UserPassword = @UserPassword,
+		UserAccessLevelId = @AccessLevelId,
+		IsActive = @IsActive			
+	where Id = @Id;		  
+END
+GO
+/****** Object:  StoredProcedure [dbo].[spUsers_GetAll]    Script Date: 7/16/2024 4:13:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spUsers_GetAll]
+AS
+
+/* EXEC [dbo].[spUsers_GetAll] */
+BEGIN
+	SELECT Users.Id, Users.FirstName, Users.LastName, Users.email, Users.UserPassword, UserAccessLevel.UserAccessLevelName,
+	Users.IsActive
+	FROM     Users INNER JOIN
+                  UserAccessLevel ON Users.UserAccessLevelId = UserAccessLevel.Id
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [react-web-store-database-exercise] SET  READ_WRITE 
+GO
